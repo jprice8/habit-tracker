@@ -2,8 +2,9 @@ package com.jprice.habit.goal;
 
 import lombok.*;
 
+import java.time.LocalDate;
+
 import javax.persistence.*;
-import java.util.Date;
 
 @ToString
 @Getter
@@ -27,5 +28,7 @@ public class Goal {
   private Long id;
   private String name;
   private String description;
+  private LocalDate startDate;
+  private LocalDate endDate;
   private Integer target;
 }

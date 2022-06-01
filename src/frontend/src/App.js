@@ -1,15 +1,13 @@
 import {useEffect, useState} from "react";
 import {HiPlusSm} from "react-icons/hi";
+import GoalForm from "./components/GoalForm";
 
 import client from "./utils/client"
 
-const goalsStatic = [
-  {id: 1, name: "Meditation", description: "Meditation is good mkay"},
-  {id: 2, name: "Exercise", description: "Exercise is good mkay"},
-]
-
 const App = () => {
   const [goals, setGoals] = useState([])
+  const [goalLoading, setGoalLoading] = useState(false)
+  const [open, setOpen] = useState(false)
 
   const fetchGoals = async () => {
     try {
@@ -24,13 +22,25 @@ const App = () => {
   }
 
   useEffect(() => {
-    fetchGoals().then(r => console.log('Then fired ' + r))
-  }, [])
+    fetchGoals().then(r => console.log('fired ' + r))
+    console.log('goal loading is ' + goalLoading)
+  }, [goalLoading])
 
   return (
     <div className="max-w-6xl mx-auto mt-10">
-      <h1 className="text-4xl text-blue-800">Goal Tracker</h1>
-      <h2>hello</h2>
+      <div className="flex justify-between">
+        <h1 className="text-4xl text-blue-800">Goal Tracker</h1>
+        <button
+          className="rounded-md px-6 py-2 bg-indigo-600 text-white font-medium border border-transparent shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
+          onClick={() => setOpen(true)}
+        >
+          Create Goal
+        </button>
+      </div>
+
+      {open && (
+        <GoalForm open={open} setOpen={setOpen} setGoalLoading={setGoalLoading} />
+      )}
 
       <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg mt-5">
         <table className="min-w-full divide-y divide-gray-300">

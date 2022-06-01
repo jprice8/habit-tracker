@@ -14,4 +14,8 @@ public class GoalService {
   public List<Goal> getAllGoals() {
     return goalRepository.findAll();
   }
+
+  public void addGoal(Goal goal) {
+    goalRepository.save(goal);
+  }
 }
