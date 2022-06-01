@@ -1,19 +1,27 @@
 import React, { Fragment } from "react"
 
-import ErrorModal from "../components/ErrorModal"
+import ErrorModal from "../../components/ErrorModal"
 
 import { Dialog, Transition } from "@headlessui/react"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
-import client from "../utils/client"
+import client from "../../utils/client"
 
-const GoalForm = (props) => {
+const EditForm = (props) => {
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm()
+  } = useForm({
+    defaultValues: {
+      name: props.selectedGoal.name,
+      description: props.selectedGoal.description,
+      startDate: props.selectedGoal.startDate,
+      endDate: props.selectedGoal.endDate,
+      target: props.selectedGoal.target
+    }
+  })
   const watchTargetRange = watch("target")
 
   const onSubmit = async (data) => {
@@ -29,23 +37,23 @@ const GoalForm = (props) => {
       }
 
       await client({
-        method: "POST",
-        url: "/api/v1/goals",
+        method: "PUT",
+        url: `/api/v1/goals/${props.selectedGoal.id}`,
         data: formData
       })
-      toast.success("Goal created!")
-      props.setOpen(false)
+      toast.success("Goal updated!")
+      props.setEditOpen(false)
     } catch (error) {
       console.error(error)
-      toast.error('Failed to create new goal. Please try again.')
+      toast.error('Failed to update goal. Please try again.')
     } finally {
       props.setGoalLoading(false)
     }
   }
 
   return (
-    <Transition.Root show={props.open} as={Fragment}>
-      <Dialog as="div" onClose={props.setOpen} className="relative z-10">
+    <Transition.Root show={props.editOpen} as={Fragment}>
+      <Dialog as="div" onClose={props.setEditOpen} className="relative z-10">
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -83,7 +91,7 @@ const GoalForm = (props) => {
                     as="h3"
                     className="text-2xl leading-6 font-semibold text-gray-900 my-3"
                   >
-                    Add Goal
+                    Edit Goal
                   </Dialog.Title>
 
                   <div>
@@ -197,7 +205,7 @@ const GoalForm = (props) => {
                     className="w-full rounded-md px-4 py-2 bg-indigo-600 text-white font-medium border border-transparent shadow-sm hover:bg-indigo-700 focus:outline-none"
                     onClick={props.handleGoalFormSubmit}
                   >
-                    Add
+                    Update
                   </button>
                 </form>
               </Dialog.Panel>
@@ -209,4 +217,4 @@ const GoalForm = (props) => {
   )
 }
 
-export default GoalForm
+export default EditForm
