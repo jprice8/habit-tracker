@@ -30,6 +30,7 @@ const App = () => {
   return (
     <div className="max-w-6xl mx-auto mt-10">
       <h1 className="text-4xl text-blue-800">Goal Tracker</h1>
+      <h2>hello</h2>
 
       <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg mt-5">
         <table className="min-w-full divide-y divide-gray-300">
@@ -53,7 +54,7 @@ const App = () => {
           </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 bg-white">
-          {goalsStatic.map((goal) => (
+          {goals.map((goal) => (
             <tr key={goal.id}>
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                 {goal.name}
