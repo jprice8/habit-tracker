@@ -1,6 +1,6 @@
 import React, { Fragment } from "react"
 
-import ErrorModal from "../../components/ErrorModal"
+import ErrorModal from "../../components/GoalForm/ErrorModal"
 
 import { Dialog, Transition } from "@headlessui/react"
 import { useForm } from "react-hook-form"
