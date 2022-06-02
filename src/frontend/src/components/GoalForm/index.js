@@ -1,11 +1,12 @@
-import React, { Fragment } from "react"
+import React, { Fragment, useState } from "react"
 
-import ErrorModal from "../components/ErrorModal"
+import ErrorModal from "./ErrorModal"
 
 import { Dialog, Transition } from "@headlessui/react"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
-import client from "../utils/client"
+import client from "../../utils/client"
+import WeekdayPicker from "./WeekdayPicker"
 
 const GoalForm = (props) => {
   const {
@@ -16,6 +17,54 @@ const GoalForm = (props) => {
   } = useForm()
   const watchTargetRange = watch("target")
 
+  const [weekdayCell, setWeekdayCell] = useState([
+    {
+      id: 1,
+      symbol: "S",
+      selected: false,
+    },
+    {
+      id: 2,
+      symbol: "M",
+      selected: false,
+    },
+    {
+      id: 3,
+      symbol: "T",
+      selected: false,
+    },
+    {
+      id: 4,
+      symbol: "W",
+      selected: false,
+    },
+    {
+      id: 5,
+      symbol: "T",
+      selected: false,
+    },
+    {
+      id: 6,
+      symbol: "F",
+      selected: false,
+    },
+    {
+      id: 7,
+      symbol: "S",
+      selected: false,
+    },
+  ])
+
+  const updateState = (id) => {
+    const newState = weekdayCell.map((item) => {
+      if (item.id === id) {
+        return { ...item, selected: !item.selected }
+      }
+      return item
+    })
+    setWeekdayCell(newState)
+  }
+
   const onSubmit = async (data) => {
     try {
       props.setGoalLoading(true)
@@ -25,19 +74,26 @@ const GoalForm = (props) => {
         description: data.description,
         startDate: data.startDate,
         endDate: data.endDate,
-        target: data.target
+        target: data.target,
+        sunday: weekdayCell.find(item => item.id === 1).selected,
+        monday: weekdayCell.find(item => item.id === 2).selected,
+        tuesday: weekdayCell.find(item => item.id === 3).selected,
+        wednesday: weekdayCell.find(item => item.id === 4).selected,
+        thursday: weekdayCell.find(item => item.id === 5).selected,
+        friday: weekdayCell.find(item => item.id === 6).selected,
+        saturday: weekdayCell.find(item => item.id === 7).selected
       }
 
       await client({
         method: "POST",
         url: "/api/v1/goals",
-        data: formData
+        data: formData,
       })
       toast.success("Goal created!")
       props.setOpen(false)
     } catch (error) {
       console.error(error)
-      toast.error('Failed to create new goal. Please try again.')
+      toast.error("Failed to create new goal. Please try again.")
     } finally {
       props.setGoalLoading(false)
     }
@@ -170,6 +226,13 @@ const GoalForm = (props) => {
                     {errors.endDate && errors.endDate.type === "required" && (
                       <ErrorModal errorMessage="Your input is required" />
                     )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-500 mb-1">
+                      Goal Days
+                    </label>
+                    <WeekdayPicker weekdayCell={weekdayCell} updateState={updateState} />
                   </div>
 
                   <div>
