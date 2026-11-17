@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
+
 import GoalDetail from "./components/GoalDetail/index"
 import GoalForm from "./components/GoalForm"
-
 import client from "./utils/client"
 
 const App = () => {
